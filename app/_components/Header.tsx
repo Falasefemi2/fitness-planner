@@ -5,7 +5,11 @@ import { Menu, X } from "lucide-react"
 import Link from "next/link"
 import { useState } from "react"
 import { ModeToggle } from "./ModeToggle";
-// import ModeToggle from "./ModeToggle"; // Import ModeToggle
+import {
+    SignInButton,
+    SignUpButton,
+} from '@clerk/nextjs'
+
 
 export default function Navbar() {
     const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -28,9 +32,13 @@ export default function Navbar() {
                     <div className="flex flex-1 items-center justify-between space-x-2 md:justify-end">
                         <ModeToggle /> {/* Add ModeToggle here */}
                         <div className="w-full flex-1 md:w-auto md:flex-none">
-                            <Button className="hidden md:inline-flex">Sign Up</Button>
+                            <SignUpButton>
+                                <Button className="hidden md:inline-flex">Sign Up</Button>
+                            </SignUpButton>
                         </div>
-                        <Button variant="outline" className="hidden md:inline-flex">Log in</Button>
+                        <SignInButton>
+                            <Button variant="outline" className="hidden md:inline-flex">Log in</Button>
+                        </SignInButton>
                         <Button variant="ghost" size="icon" className="md:hidden" onClick={toggleMenu}>
                             {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
                         </Button>
