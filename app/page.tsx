@@ -3,6 +3,7 @@ import HeroSection from "./_components/HeroSection";
 import FeaturesSection from "./_components/FeaturesSection";
 import PricingFeatures from "./_components/PricingSection";
 import TestimonialSection from "./_components/TestimonialsSection";
+import FooterSection from "./_components/FooterSection";
 
 export default function FitnessSaasLanding() {
 
@@ -15,6 +16,7 @@ export default function FitnessSaasLanding() {
         <PricingFeatures />
         <TestimonialSection />
       </main>
+      <FooterSection />
     </div>
   )
 }
