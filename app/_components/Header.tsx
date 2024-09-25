@@ -52,8 +52,12 @@ export default function Navbar() {
                         <Link className="block" href="#features" onClick={toggleMenu}>Features</Link>
                         <Link className="block" href="#pricing" onClick={toggleMenu}>Pricing</Link>
                         <Link className="block" href="#testimonials" onClick={toggleMenu}>Testimonials</Link>
-                        <Button className="w-full" onClick={toggleMenu}>Sign Up</Button>
-                        <Button variant="outline" className="w-full" onClick={toggleMenu}>Log in</Button>
+                        <SignUpButton>
+                            <Button className="w-full" >Sign Up</Button>
+                        </SignUpButton>
+                        <SignInButton>
+                            <Button variant="outline" className="w-full" >Log in</Button>
+                        </SignInButton>
                     </div>
                 </div>
             )}

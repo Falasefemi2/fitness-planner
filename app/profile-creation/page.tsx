@@ -5,7 +5,7 @@ import Link from "next/link"
 
 export default function ProfileCreation() {
     return (
-        <div className="flex flex-col items-center justify-center min-h-screen bg-background text-foreground p-4">
+        <div className="flex flex-col items-center justify-center bg-background text-foreground p-4 mt-8">
             <div className="w-full max-w-md space-y-8 text-center">
                 <Image
                     src={fitness}
