@@ -5,24 +5,23 @@ import { useState } from 'react'
 import Image from 'next/image'
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
-import { Progress } from "@/components/ui/progress"
+// import { Progress } from "@/components/ui/progress"
 import man from "../../gymman.jpg"
 import woman from "../../sportwoman.jpg"
 
 export default function GenderStep({ onNext }: { onNext: () => void }) {
+    const handleNextPage = () => {
+        onNext();
+    }
     const [selectedGender, setSelectedGender] = useState<string | null>(null)
 
     const handleGenderSelect = (gender: string) => {
         setSelectedGender(gender);
-        onNext(); // Call onNext when a gender is selected
     }
 
     return (
-        <div className="min-h-screen flex flex-col">
-            <div className="container mx-auto px-5 py-5">
-                <h1 className='text-center font-light text-sm mb-4'><span className=' text-primary'>01</span> GOAL & FOCUS</h1>
-                <Progress value={33} className="w-full" />
-            </div>
+        <div className="flex flex-col">
+
 
             <main className="flex-grow flex flex-col items-center justify-center p-4">
                 <Card className="w-full max-w-md p-6 space-y-6">
@@ -31,7 +30,7 @@ export default function GenderStep({ onNext }: { onNext: () => void }) {
                     <div className="flex justify-center space-x-8">
                         <button
                             onClick={() => handleGenderSelect('male')}
-                            className={`flex flex-col items-center space-y-2 p-4 rounded-lg transition-colors ${selectedGender === 'male' ? 'bg-primary/10' : 'hover:bg-muted'
+                            className={`flex flex-col items-center space-y-2 p-4 rounded-lg transition-colors ${selectedGender === 'male' ? 'bg-primary' : 'hover:bg-muted'
                                 }`}
                         >
                             <Image
@@ -46,7 +45,7 @@ export default function GenderStep({ onNext }: { onNext: () => void }) {
 
                         <button
                             onClick={() => handleGenderSelect('female')}
-                            className={`flex flex-col items-center space-y-2 p-4 rounded-lg transition-colors ${selectedGender === 'female' ? 'bg-primary/10' : 'hover:bg-muted'
+                            className={`flex flex-col items-center space-y-2 p-4 rounded-lg transition-colors ${selectedGender === 'female' ? 'bg-primary' : 'hover:bg-muted'
                                 }`}
                         >
                             <Image
@@ -60,7 +59,7 @@ export default function GenderStep({ onNext }: { onNext: () => void }) {
                         </button>
                     </div>
 
-                    <Button className="w-full" >
+                    <Button className="w-full" onClick={handleNextPage} disabled={!selectedGender}>
                         Next
                     </Button>
                 </Card>
