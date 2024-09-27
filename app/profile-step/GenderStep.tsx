@@ -5,13 +5,15 @@ import { useState } from 'react'
 import Image from 'next/image'
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
-// import { Progress } from "@/components/ui/progress"
 import man from "../../gymman.jpg"
 import woman from "../../sportwoman.jpg"
 
-export default function GenderStep({ onNext }: { onNext: () => void }) {
+export default function GenderStep({ onNext }: { onNext: (data: { gender: string }) => void }) {
+
     const handleNextPage = () => {
-        onNext();
+        if (selectedGender) {
+            onNext({ gender: selectedGender });
+        }
     }
     const [selectedGender, setSelectedGender] = useState<string | null>(null)
 
@@ -21,8 +23,6 @@ export default function GenderStep({ onNext }: { onNext: () => void }) {
 
     return (
         <div className="flex flex-col">
-
-
             <main className="flex-grow flex flex-col items-center justify-center p-4">
                 <Card className="w-full max-w-md p-6 space-y-6">
                     <h1 className="text-2xl font-bold text-center">What's your gender?</h1>

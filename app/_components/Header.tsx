@@ -15,6 +15,8 @@ export default function Navbar() {
     const [isMenuOpen, setIsMenuOpen] = useState(false)
 
     const toggleMenu = () => setIsMenuOpen(!isMenuOpen)
+
+
     return (
         <>
             <header className="sticky top-0 z-50 w-full max-w-4xl mx-auto border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
