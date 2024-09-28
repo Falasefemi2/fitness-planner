@@ -1,9 +1,10 @@
-import Navbar from "./_components/Header";
+// import Navbar from "./_components/Header";
 import HeroSection from "./_components/HeroSection";
 import FeaturesSection from "./_components/FeaturesSection";
 import PricingFeatures from "./_components/PricingSection";
 import TestimonialSection from "./_components/TestimonialsSection";
 import FooterSection from "./_components/FooterSection";
+import Navbar from "./_components/Header";
 
 export default function FitnessSaasLanding() {
 

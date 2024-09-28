@@ -17,6 +17,7 @@ export async function createUserProfile(formData: FormData) {
     }
 
     const rawFormData = Object.fromEntries(formData.entries());
+    console.log("Raw Form Data:", rawFormData); // Add this line
     const validatedData = userProfileSchema.parse({ ...rawFormData, userId });
 
     await db.insert(userProfile).values(validatedData);
