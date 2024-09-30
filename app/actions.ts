@@ -5,7 +5,7 @@
 import { auth } from "@clerk/nextjs/server";
 import { userProfileSchema } from "./types/user-profile";
 import { db } from "./db";
-import { User, UserProfile, userProfile } from "./db/schema";
+import { User, userProfile } from "./db/schema";
 import { revalidatePath } from "next/cache";
 import { desc, eq } from "drizzle-orm";
 import { generatedExercises } from "@/app/db/schema";
@@ -79,9 +79,9 @@ export async function createUserProfile(formData: any) {
 const apiKey = `AIzaSyAc3aClnonmqBoCZ8zLdFZyWjSd-qMD3DQ`;
 const genAI = new GoogleGenerativeAI(apiKey);
 
-type UserWithProfile = User & {
-  profile: UserProfile | null;
-};
+// type UserWithProfile = User & {
+//   profile: UserProfile | null;
+// };
 
 type Exercise = {
   name: string;
