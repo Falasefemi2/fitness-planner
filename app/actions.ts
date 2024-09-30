@@ -10,27 +10,6 @@ import { revalidatePath } from "next/cache";
 import { eq } from "drizzle-orm";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-// export async function createUserProfile(formData: any) {
-//   try {
-//     const { userId } = auth();
-
-//     if (!userId) {
-//       throw new Error("Unauthorized");
-//     }
-
-//     const validatedData = userProfileSchema.parse({ ...formData, userId });
-//     console.log(validatedData);
-
-//     await db.insert(userProfile).values(validatedData);
-//     revalidatePath("/");
-//     return { success: true, message: "Profile created successfully" };
-//   } catch (error) {
-//     console.error("Error creating user profile", error);
-//     return { success: false, message: "Failed to create profile" };
-//   }
-// }
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function createUserProfile(formData: any) {
   try {
     const { userId } = auth();
@@ -93,60 +72,3 @@ export async function createUserProfile(formData: any) {
     return { success: false, message: "Failed to create/update profile" };
   }
 }
-
-// export async function createUserProfile(formData: any) {
-//   try {
-//     const { userId } = auth();
-
-//     if (!userId) {
-//       throw new Error("Unauthorized");
-//     }
-
-//     const validatedData = userProfileSchema.parse(formData);
-//     console.log("Validated data:", validatedData);
-
-//     // Check if user exists in the User table
-//     const existingUser = await db
-//       .select()
-//       .from(User)
-//       .where(eq(User.id, userId))
-//       .execute();
-
-//     if (existingUser.length === 0) {
-//       throw new Error("User not found in database");
-//     }
-
-//     // Check if profile already exists
-//     const existingProfile = await db
-//       .select()
-//       .from(userProfile)
-//       .where(eq(userProfile.userId, userId))
-//       .execute();
-
-//     if (existingProfile.length > 0) {
-//       // Update existing profile
-//       await db
-//         .update(userProfile)
-//         .set(validatedData)
-//         .where(eq(userProfile.userId, userId));
-//     } else {
-//       const id = crypto.randomUUID(); // Generate a UUID for the profile ID
-
-//       // Insert new profile
-//       await db.insert(userProfile).values({
-//         id,
-//         // userId,
-//         ...validatedData,
-//       });
-//     }
-
-//     revalidatePath("/");
-//     return { success: true, message: "Profile created/updated successfully" };
-//   } catch (error) {
-//     console.error("Error creating/updating user profile", error);
-//     if (error instanceof Error) {
-//       return { success: false, message: error.message };
-//     }
-//     return { success: false, message: "Failed to create/update profile" };
-//   }
-// }
