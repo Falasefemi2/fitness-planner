@@ -5,6 +5,7 @@ import { SignInButton, SignUpButton } from '@clerk/nextjs';
 import { ModeToggle } from './ModeToggle';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { CheckUser } from '@/lib/CheckUser';
+import React from 'react';
 
 
 export default async function Navbar() {
