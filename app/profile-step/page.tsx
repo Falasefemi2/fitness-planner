@@ -38,7 +38,7 @@ export default function ProfileSteps() {
         const result = await createUserProfile(values);
         if (result.success) {
             toast.success(result.message)
-            router.push('/');
+            router.push('/personalized-exercise');
         } else {
             console.error(result.message);
             toast.error(result.message)
