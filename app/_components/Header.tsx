@@ -1,14 +1,9 @@
 import Link from 'next/link'
 import { Button } from "@/components/ui/button"
 import { Menu } from "lucide-react"
-import { User } from '../db/schema';
-// import { auth } from '@clerk/nextjs/server';
-import { db } from '../db';
-// import { sql } from 'drizzle-orm';
 import { SignInButton, SignUpButton } from '@clerk/nextjs';
 import { ModeToggle } from './ModeToggle';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { eq } from "drizzle-orm";
 import { CheckUser } from '@/lib/CheckUser';
 
 
@@ -18,55 +13,17 @@ export default async function Navbar() {
     try {
         // Get or create the user using the server-side function `CheckUser`
         user = await CheckUser();
-        console.log("User fetched from auth:", user);
+        console.log("User fetched or created:", user);
 
         if (!user) {
             console.log("User not authenticated");
         } else {
-            const userId = user.id;
-
-            // Check if user exists in the database
-            const existingUser = await db
-                .select()
-                .from(User)
-                .where(eq(User.id, userId))
-                .execute();
-
-            console.log("Existing user in DB:", existingUser);
-
-            if (existingUser.length === 0) {
-                // User does not exist, create a new user
-                const newUser = await db.insert(User).values({
-                    id: userId,
-                    email: user.email || "", // Ensure email is not undefined
-                    profileImageUrl: user.profileImageUrl || "",
-                    firstName: user.firstName || "",
-                    lastName: user.lastName || "",
-                    createdAt: new Date(),
-                    updatedAt: new Date(),
-                }).returning();
-
-                console.log("New user created:", newUser);
-            } else {
-                // User exists, update the profile if needed
-                const updatedUser = await db
-                    .update(User)
-                    .set({
-                        email: user.email || "",
-                        profileImageUrl: user.profileImageUrl || "",
-                        firstName: user.firstName || "",
-                        lastName: user.lastName || "",
-                        updatedAt: new Date(),
-                    })
-                    .where(eq(User.id, userId))
-                    .execute();
-
-                console.log("User updated:", updatedUser);
-            }
+            console.log("Authenticated user:", user);
         }
     } catch (error) {
         console.error("Error managing user profile:", error);
     }
+
 
     // Define navigation links
     const NavItems = () => (
