@@ -1,0 +1,1 @@
+ALTER TABLE "fitness_user_profiles" ALTER COLUMN "id" SET DATA TYPE varchar(255);

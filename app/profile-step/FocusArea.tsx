@@ -12,28 +12,46 @@ import arm from "../../fit2.jpg"
 import chest from "../../fit3.jpg"
 import abs from "../../fit4.jpg"
 import leg from "../../fit5.jpg"
+import { z } from 'zod'
+import { userProfileSchema } from '../types/user-profile'
 
 
-export default function FocusArea({ onNext, onBack }: { onNext: (data: { focusArea: string }) => void; onBack: () => void }) {
-    const [selectedFocus, setSelectedFocus] = useState<string | null>(null)
 
-    const handleFocusSelect = (focus: string) => {
-        setSelectedFocus(focus === selectedFocus ? null : focus)
-    }
+type FocusAreaType = z.infer<typeof userProfileSchema>['focusArea'];
 
-    const handleNextPage = () => {
-        if (selectedFocus) {
-            onNext({ focusArea: selectedFocus });
-        }
-    }
+interface FocusAreaProps {
+    onBack: () => void;
+    handleSubmit: (values: z.infer<typeof userProfileSchema>) => void;
+    formData: z.infer<typeof userProfileSchema>;
+}
 
-    const focusAreas = [
+export default function FocusArea({ onBack, handleSubmit, formData }: FocusAreaProps) {
+    const [selectedFocus, setSelectedFocus] = useState<FocusAreaType | null>(
+        formData.focusArea || null
+    );
+
+    const handleFocusSelect = (focus: FocusAreaType) => {
+        setSelectedFocus(focus === selectedFocus ? null : focus);
+    };
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const focusAreas: { name: FocusAreaType; image: any }[] = [
         { name: "Full-Body", image: fullbody },
         { name: "Arm", image: arm },
         { name: "Chest", image: chest },
         { name: "Abs", image: abs },
         { name: "Leg", image: leg },
-    ]
+    ];
+
+    const onSubmit = () => {
+        if (selectedFocus) {
+            const updatedFormData: z.infer<typeof userProfileSchema> = {
+                ...formData,
+                focusArea: selectedFocus,
+            };
+            handleSubmit(updatedFormData);
+        }
+    };
 
     return (
         <div className="container mx-auto px-4 py-8">
@@ -66,10 +84,10 @@ export default function FocusArea({ onNext, onBack }: { onNext: (data: { focusAr
                 <Button variant="outline" onClick={onBack}>
                     Back
                 </Button>
-                <Button onClick={handleNextPage} disabled={!selectedFocus}>
-                    Next
+                <Button onClick={onSubmit} disabled={!selectedFocus}>
+                    Submit
                 </Button>
             </div>
         </div>
-    )
+    );
 }

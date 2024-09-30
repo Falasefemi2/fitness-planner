@@ -7,37 +7,33 @@ import { Progress } from "@/components/ui/progress";
 import FocusAra from "./FocusArea";
 import { useRouter } from "next/navigation";
 import { createUserProfile } from "../actions";
+import { userProfileSchema } from "../types/user-profile";
+import { z } from "zod";
 
+type FormData = z.infer<typeof userProfileSchema>;
 
 export default function ProfileSteps() {
     const [currentStep, setCurrentStep] = useState<number>(1);
-    const [formData, setFormData] = useState({
-        gender: '',
-        goal: '',
-        focusArea: '',
-    });
+    const [formData, setFormData] = useState<Partial<FormData>>({});
     const router = useRouter();
 
-    const handleNextStep = (data: Partial<typeof formData>) => {
-        console.log("Data received from step component:", data);
+    const handleGenderStep = (data: { gender: "male" | "female" }) => {
         setFormData((prev) => ({ ...prev, ...data }));
         setCurrentStep((prev) => prev + 1);
-        console.log("Updated form data:", { ...formData, ...data });
+    };
+
+    const handleGoalsStep = (data: { goal: "lose-weight" | "build-muscle" | "keep-fit" }) => {
+        setFormData((prev) => ({ ...prev, ...data }));
+        setCurrentStep((prev) => prev + 1);
     };
 
     const handlePreviousStep = () => {
         setCurrentStep((prev) => prev - 1);
     };
 
-    // Final submission
-    const finalSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        console.log("Form data at submission:", formData);
-        const formDataToSubmit = new FormData();
-        formDataToSubmit.append("gender", formData.gender);
-        formDataToSubmit.append("goal", formData.goal);
-        formDataToSubmit.append("focusArea", formData.focusArea);
-        const result = await createUserProfile(formDataToSubmit);
+    const handleSubmit = async (values: FormData) => {
+        console.log("Final form data:", values);
+        const result = await createUserProfile(values);
         if (result.success) {
             router.push('/');
         } else {
@@ -62,21 +58,21 @@ export default function ProfileSteps() {
     };
 
     return (
-        <form onSubmit={finalSubmit}>
-            <div className="container mx-auto px-4 py-4">
-                <h1 className="text-sm font-bold mb-2">{stepText()}</h1>
-                <Progress value={progressValue} className="h-2" />
-            </div>
-            {currentStep === 1 && <GenderStep onNext={handleNextStep} />}
-            {currentStep === 2 && <GoalsStep onNext={handleNextStep} onBack={handlePreviousStep} />}
-            {currentStep === 3 && <FocusAra onNext={handleNextStep} onBack={handlePreviousStep} />}
+        <div className="container mx-auto px-4 py-4">
+            <h1 className="text-sm font-bold mb-2">{stepText()}</h1>
+            <Progress value={progressValue} className="h-2" />
 
-            {/* Hidden inputs */}
-            <input type="hidden" name="gender" value={formData.gender} />
-            <input type="hidden" name="goal" value={formData.goal} />
-            <input type="hidden" name="focusArea" value={formData.focusArea} />
+            {currentStep === 1 && <GenderStep onNext={handleGenderStep} />}
+            {currentStep === 2 && <GoalsStep onNext={handleGoalsStep} onBack={handlePreviousStep} />}
+            {currentStep === 3 && (
+                <FocusAra
+                    onBack={handlePreviousStep}
+                    handleSubmit={handleSubmit}
+                    formData={formData as FormData}
+                />
+            )}
+        </div>
 
-            {currentStep === 3 && <button type="submit">Submit</button>}
-        </form>
     );
 }
+
