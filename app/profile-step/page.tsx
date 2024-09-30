@@ -9,6 +9,8 @@ import { useRouter } from "next/navigation";
 import { createUserProfile } from "../actions";
 import { userProfileSchema } from "../types/user-profile";
 import { z } from "zod";
+import { toast } from "sonner"
+
 
 type FormData = z.infer<typeof userProfileSchema>;
 
@@ -35,9 +37,11 @@ export default function ProfileSteps() {
         console.log("Final form data:", values);
         const result = await createUserProfile(values);
         if (result.success) {
+            toast.success(result.message)
             router.push('/');
         } else {
             console.error(result.message);
+            toast.error(result.message)
         }
     };
 
