@@ -14,6 +14,8 @@ import abs from "../../fit4.jpg"
 import leg from "../../fit5.jpg"
 import { z } from 'zod'
 import { userProfileSchema } from '../types/user-profile'
+import { Loader2 } from 'lucide-react'
+import React from 'react'
 
 
 
@@ -29,6 +31,8 @@ export default function FocusArea({ onBack, handleSubmit, formData }: FocusAreaP
     const [selectedFocus, setSelectedFocus] = useState<FocusAreaType | null>(
         formData.focusArea || null
     );
+    const [loading, setLoading] = useState(false); // {{ edit_1 }}
+
 
     const handleFocusSelect = (focus: FocusAreaType) => {
         setSelectedFocus(focus === selectedFocus ? null : focus);
@@ -45,12 +49,14 @@ export default function FocusArea({ onBack, handleSubmit, formData }: FocusAreaP
 
     const onSubmit = () => {
         if (selectedFocus) {
+            setLoading(true);
             const updatedFormData: z.infer<typeof userProfileSchema> = {
                 ...formData,
                 focusArea: selectedFocus,
             };
             handleSubmit(updatedFormData);
         }
+        setLoading(false);
     };
 
     return (
@@ -84,9 +90,17 @@ export default function FocusArea({ onBack, handleSubmit, formData }: FocusAreaP
                 <Button variant="outline" onClick={onBack}>
                     Back
                 </Button>
-                <Button onClick={onSubmit} disabled={!selectedFocus}>
-                    Submit
+                <Button onClick={onSubmit} disabled={!selectedFocus || loading}>
+                    {loading ? (
+                        <>
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            Submitting...
+                        </>
+                    ) : (
+                        "Submit"
+                    )}
                 </Button>
+
             </div>
         </div>
     );
