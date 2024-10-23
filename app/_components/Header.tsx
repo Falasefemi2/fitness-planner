@@ -4,26 +4,20 @@ import { Menu } from "lucide-react"
 import { SignInButton, SignUpButton } from '@clerk/nextjs';
 import { ModeToggle } from './ModeToggle';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { CheckUser } from '@/lib/CheckUser';
+// import { CheckUser } from '@/lib/CheckUser';
 import React from 'react';
+import { auth, currentUser } from "@clerk/nextjs/server"
+import { db } from '../db';
+import { eq } from 'drizzle-orm';
+import { User } from '../db/schema';
+
 
 
 export default async function Navbar() {
-    let user = null;
 
-    try {
-        // Get or create the user using the server-side function `CheckUser`
-        user = await CheckUser();
-        console.log("User fetched or created:", user);
+    const { userId } = auth();
+    const user = await currentUser();
 
-        if (!user) {
-            console.log("User not authenticated");
-        } else {
-            console.log("Authenticated user:", user);
-        }
-    } catch (error) {
-        console.error("Error managing user profile:", error);
-    }
 
 
     // Define navigation links
@@ -60,6 +54,52 @@ export default async function Navbar() {
             )}
         </>
     );
+
+    if (user && userId) {
+        try {
+            // First, try to find the user by email
+            const existingUser = await db
+                .select()
+                .from(User)
+                .where(eq(User.email, user.emailAddresses[0]?.emailAddress || ""))
+                .limit(1);
+
+            if (existingUser.length > 0) {
+                // User exists, update their information
+                const updatedUser = await db
+                    .update(User)
+                    .set({
+                        profileImageUrl: user.imageUrl || "",
+                        firstName: user.firstName || "",
+                        lastName: user.lastName || "",
+                        updatedAt: new Date(),
+                    })
+                    .where(eq(User.id, existingUser[0].id))
+                    .returning();
+
+                console.log("User updated:", updatedUser[0]);
+            } else {
+                // User doesn't exist, insert new user
+                const newUser = await db
+                    .insert(User)
+                    .values({
+                        id: user.id,
+                        email: user.emailAddresses[0]?.emailAddress || "",
+                        profileImageUrl: user.imageUrl || "",
+                        firstName: user.firstName || "",
+                        lastName: user.lastName || "",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                    })
+                    .returning();
+
+                console.log("New user created:", newUser[0]);
+            }
+        } catch (error) {
+            console.error("Error updating or creating user in database:", error);
+        }
+    }
+
 
     return (
         <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
